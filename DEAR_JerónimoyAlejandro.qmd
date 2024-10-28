@@ -1,0 +1,199 @@
+---
+title: "¿Es realmente la relación calidad - precio cierta en el mercado de computadores?¿Se habla siempre de una relación directa entre estás variables?"
+author: "Alejandro Henao, Jerónimo Acevedo"
+lang: es
+theme: minty
+format:
+  html:
+    toc: true
+    toc-location: left
+    number-sections: true
+editor: visual 
+---
+
+```{r include = FALSE}
+knitr :: opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+```
+
+![COMPUTADOR](portátil.jpg)\
+
+## PREGUNTAS PRINCIPALES PARA ESTUDIO
+
+-   ¿Cuál es la característica técnica que que tiene mayor relación con el precio de los computadores?
+
+-   ¿Qué tan importante puede ser la marca de un computador en relación directa con su precio?¿Es realmente la marca más costosa la que mejor calidad ofrece?
+
+-   ¿Qué tan importantes son la ram y la tarjeta gráfica con respecto al precio que puede tener un computador?
+
+### OBJETIVO GENERAL
+
+Analizar el mercado de los computadores mediante un análisis de regresión lineal múltiple, teniendo como factor principal el precio y su variabilidad según una amplia diversidad de variables.
+
+### OBJETIVOS ESPECIFICOS
+
+1.  Identificar las carácteristicas de un buen computador y poner en cuestión que tan cierto es que los computadores más costosos siempre son la mejor opción.
+
+2.  Estudiar la relación entre la ram y la tarjeta gráfica y su importancia frente al funcionamiento de un computador y su precio.
+
+## TIPOS DE DATOS
+
+La base de datos analizada contiene 3000 observaciones y 12 varibles, distribuidas así:
+
+| VARIABLES        | TIPO         |
+|------------------|--------------|
+| Price            | Cuantitativa |
+| Brand            | Cualitativa  |
+| Model            | Cualitativa  |
+| Processor        | Cualitativa  |
+| Graphics Card    | Cualitativa  |
+| Ram              | Cuantitativa |
+| Storage          | Cuantitativa |
+| Battery Life     | Cuantitativa |
+| Warranty         | Cuantitativa |
+| Screen Size      | Cuantitativa |
+| Weight           | Cuantitativa |
+| Operating System | Cualitativa  |
+
+## Analisis general del estudio
+
+Para tener un análisis profundo de la prolemática se inicio realizando gráficas de dispersión para encontrar que tan influyente era cada característica técnica en los precios y con esto poder concluir en que se basaban las marcas o empresas de computadores para estipular sus precios.
+
+El análisis del grafico de dispersión del peso con respecto al precio muestra que hay una relación débil debido a la dispersión de todos lo datos en el gráfico y una relación levemente directa con una pendiente muy mínima, de lo cual se concluye que aunque se ve que a medida que aumenta el precio, también aumenta el peso, la relación es muy mínima por lo que se podría decir que la influencia del peso en el precio del computador es insignificante.
+
+```{r}
+ggplot(datos1, aes(x = `Weight (kg)`, y = `Price ($)`)) +
+  geom_point() +
+  geom_smooth(method = lm, color = "red", fill = "#69b3a2", se = TRUE) +
+  ggtitle("Peso vs Precio")
+```
+
+Siguiendo con el gráfico de la ram y el precio, se encontró algo llamativo, pues no hay una relación ni inversa ni directa, ya que se encontró una línea recta vertical, además podemos ver que la relación es débil, también al ver líneas verticales en los extremos es posible que se puedan encontrar puntos outliers, todo esto quiere decir que el precio no parece variar mucho en relación con la memoria RAM de los computadores.
+
+```{r}
+ggplot(datos1, aes(x = `Storage (GB)`, y = `Price ($)`)) +
+  geom_point() +
+  geom_smooth(method = lm, color = "red", fill = "#69b3a2", se = TRUE) +
+  ggtitle("Espacio vs Precio")
+```
+
+Es el momento de analizar la relación entre el almacenamiento y el precio, aquí no se ve nada diferente y se vuelve a observar una relación débil y muy neutra es decir ni inversa ni directa ya que se encuentra un patron muy similar al grafico de la ram, todo esto quiere decir que el almacenamiento no tiene tanta influencia como se esperaba en la estipulación del precio de los computadores.
+
+```{r}
+ggplot(datos1, aes(x = `RAM (GB)`, y = `Price ($)`)) +
+  geom_point() +
+  geom_smooth(method = lm, color = "red", fill = "#69b3a2", se = TRUE) +
+  ggtitle("Ram vs Precio")
+```
+
+En el tamaño de la pantalla y el precio se encuentran las mismas relaciones, débil y “neutra”, por lo que de igual manera se concluye que el tamaño de la pantalla no tiene mucho que ver en el precio del computador.
+
+```{r}
+ggplot(datos1, aes(x = `Battery Life (hours)`, y = `Price ($)`)) +
+  geom_point() +
+  geom_smooth(method = lm, color = "red", fill = "#69b3a2", se = TRUE) +
+  ggtitle("Vida útil de su batería vs Precio")
+```
+
+En la duración de batería y la relación con el precio, se observa que hay una relación débil debido a que los datos están muy dispersos, pero se encuentra una relación levemente directa, con una pendiente muy mínima, lo que quiere decir que a medida que aumenta el precio la duración de la batería del computador también aumenta, pero esta influencia es muy poco significativa.
+
+```{r}
+ggplot(datos1, aes(x = `Warranty (years)`, y = `Price ($)`)) +
+  geom_point() +
+  geom_smooth(method = lm, color = "red", fill = "#69b3a2", se = TRUE) +
+  ggtitle("Garantía vs Precio")
+```
+
+Por ultimo analizamos los años de garantía con respecto al precio y se sigue observando una relación débil y “ neutra”, por lo que se concluye que esta característica no tiene gran influencia en los precios.
+
+```{r}
+ggplot(datos1, aes(x = `Screen Size (inches)`, y = `Price ($)`)) +
+  geom_point() +
+  geom_smooth(method = lm, color = "red", fill = "#69b3a2", se = TRUE) +
+  ggtitle("Tamaño de la pantalla vs Precio")
+```
+
+-   Según un estudio de correlación realizado es posible concluir que las variables cuantitativas que mayor relación tienen con el precio son el espacio (Storage) y la RAM, esto quiere decir que estas características son influyentes para las marcas a la hora de poner los precios de sus computadores. Sin embargo, estas variables cuantitativas no tienen una relación tan fuerte con el precio, por lo que se puede concluir que posiblemente las variables importantes no son cuantitativas, siendo así las variables que influyen realmente en el precio las cualitativas, tales como: El procesador, la tarjeta gráfica y el sistema operativo.
+
+```{r}
+# Cargar librerías
+library(ggplot2)
+library(reshape2)
+
+
+# Convertir la matriz de correlación a formato largo para facilitar el gráfico
+melted_correlation <- melt(correlation_matrix)
+
+# Graficar la matriz de correlación usando ggplot2
+ggplot(data = melted_correlation, aes(x=Var1, y=Var2, fill=value)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue", high = "orange", mid = "white",
+                       midpoint = 0, limit = c(-1,1), space = "Lab",
+                       name="Correlación") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+  coord_fixed() +
+  labs(title = "Matriz de correlación entre características técnicas y precio")
+```
+
+Ahora pues, para tener un análisis más preciso se puede optar por hacer observaciones en la correlación de cada característica con respecto al precio. Al hacerlo se vió que las únicas correlaciones positivas son el almacenamiento y la ram con respecto al precio, por lo que se podría concluir que la ram y el almacenamiento si tienen una influencia en el precio de los computadores, además son las únicas características que son variables cuantitativas las cuales tienen una influencia en el valor monetario que se le da al equipo.
+
+![MATRÍZ DE CORRELACIÓN](MdC.jpg)
+
+-   A la hora de realizar una compra muchas veces se ve influenciadda una decisión por la marca seleccionada y a veces se deja de lado la calidad y las características técnicas que tienen los productos de la competencia, en este caso se trata de marcas de computadores, y se quiere demostrar si es solo un impulso o si en realidad muchas veces la marca afecta la calidad del equipo.
+
+Tras realizar un estudio en el cual se compara la marca con el precio que se brinda al mercado se puede hallar que aunque es una comparación significativa, realmente es poco variable, tal vez para que sea un estudio con mayor precisión sería necesario traer a evaluación otras marcas con precios más elevados y otras con precios más bajos, para realizar una amplia comparación, pues en este sector cerrado de mercado dictado para el estudio entre 5 marcas diferentes, se observa una media de precios muy similares entre sí.
+
+```{r}
+datos1$Brand <- as.factor(datos1$Brand)
+library(dplyr)
+
+# Crear un boxplot del precio por marca
+boxplot(datos1$`Price ($)` ~ datos1$Brand, data = datos1, 
+        main = "Distribución de Precio por Marca",
+        xlab = "Marca",
+        ylab = "Precio ($)",
+        col = "lightblue")
+
+anova_result1 <- aov(datos1$`Price ($)` ~ datos1$Brand, data = datos1)
+summary(anova_result1)
+```
+
+-   La RAM y la Tarjeta Gráfica de un computador además de ser importantes en la caliddad de un computador son sumamente importantes para la determinación de su precio de venta, en los gráficos anteriores no se podía observar con facilidad que tan determinante era la RAM con respecto al precio, por lo que fue necesario plantear otro método de estudio desde una prueba estadística para análisis de varianza como lo es la ANOVA.
+
+Del promedio del precio por tipo de Tarjeta Gráfica se puede obtener que es importante a la hora de determinar el precio, pues entre los diferentes tipos de tarjetas hay una variabilidad que aunque es mínima entre sí puede ser importante para un cliente, se pueden ordenar de mayor a menor precio así:
+
+| TARJETA GRÁFICA | PRECIO |
+|-----------------|--------|
+| Intel UHD       | 1801   |
+| NVIDIA RTX 3060 | 1799   |
+| NVIDIA GTX 1650 | 1783   |
+| AMD Radeon      | 1779   |
+| NVIDIA RTX 3070 | 1743   |
+
+```{r}
+datos1$`Graphics Card` <- as.factor(datos1$`Graphics Card`)
+library(dplyr)
+
+# Calcular el promedio y desviación estándar del precio por tipo de tarjeta gráfica
+datos1 %>%
+  group_by(`Graphics Card`) %>%
+  summarize(
+    mean_price = mean(`Price ($)`, na.rm = TRUE),
+    sd_price = sd(`Price ($)`, na.rm = TRUE),
+    count = n())
+
+# Crear un boxplot de Precio por Tarjeta Gráfica
+boxplot(datos1$`Graphics Card`~ datos1$`Price ($)`, data = datos1, 
+        main = "Distribución de Precio por Tipo de Tarjeta Gráfica",
+        xlab = "Tarjeta Gráfica",
+        ylab = "Precio ($)",
+        col = "lightblue")
+
+anova_result <- aov(datos1$`RAM (GB)`~ datos1$`Price ($)`, data = datos1)
+summary(anova_result)
+```
+
+## Referencias
+
+\[https://www.kaggle.com/datasets/zafarali27/laptop-price-prediction?resource=download\]
